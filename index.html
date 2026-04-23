@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Princess Ann's Closet · 方案報價</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --milk:    #fdf8f3;
+  --cream:   #f5ece0;
+  --latte:   #e8d5bf;
+  --caramel: #c49a6c;
+  --mocha:   #8b6347;
+  --espresso:#4a3728;
+  --rose:    #e8c4b0;
+  --rosedark:#c9956e;
+  --text:    #3d2b1f;
+  --muted:   #9a7d68;
+  --border:  #dfc9b0;
+  --white:   #ffffff;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Serif TC', serif;
+  background: var(--milk);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(232,197,176,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 90% 100%, rgba(196,154,108,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero {
+  position: relative; text-align: center; padding: 70px 24px 56px; overflow: hidden;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--caramel), transparent);
+}
+.hero-crown { font-size: 28px; margin-bottom: 12px; opacity: 0.7; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+.hero-en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 30px; font-weight: 300; color: var(--caramel); letter-spacing: 2px; line-height: 1.2; margin-bottom: 6px; }
+.hero-zh { font-size: 13px; font-weight: 200; letter-spacing: 5px; color: var(--muted); margin-bottom: 28px; }
+.hero-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--rosedark); letter-spacing: 1px; }
+
+.tabs-wrap { position: relative; z-index: 1; padding: 32px 20px 0; max-width: 760px; margin: 0 auto; }
+.tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.tab-btn {
+  padding: 12px 6px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.6); border-radius: 4px 4px 0 0;
+  font-family: 'Noto Serif TC', serif; font-size: 13px; letter-spacing: 1.5px;
+  color: var(--muted); cursor: pointer; transition: all 0.25s; text-align: center; line-height: 1.5;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.85); color: var(--mocha); }
+.tab-btn.active { background: var(--white); border-color: var(--latte); border-bottom-color: var(--white); color: var(--espresso); font-weight: 400; }
+.tab-btn .tab-icon { display: block; font-size: 18px; margin-bottom: 4px; }
+
+.card {
+  position: relative; z-index: 1; max-width: 760px; margin: 0 auto;
+  background: var(--white); border: 1px solid var(--latte); border-top: none;
+  border-radius: 0 0 6px 6px; padding: 32px 28px 170px;
+  box-shadow: 0 8px 40px rgba(74,55,40,0.08);
+}
+@media(max-width:540px){ .card{ padding: 20px 16px 170px; } }
+
+.sec-label { display: flex; align-items: center; gap: 14px; margin: 28px 0 14px; }
+.sec-label:first-child { margin-top: 0; }
+.sec-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel); flex-shrink: 0; }
+.sec-title { font-size: 14px; letter-spacing: 3px; color: var(--mocha); font-weight: 400; }
+.sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--latte), transparent); }
+
+.pkg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+@media(max-width:480px){ .pkg-grid{ grid-template-columns: 1fr; } }
+
+.pkg-card {
+  border: 1.5px solid var(--border); border-radius: 6px; padding: 18px 16px;
+  background: var(--milk); cursor: pointer; transition: all 0.2s ease;
+  position: relative; overflow: hidden;
+}
+.pkg-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--latte), var(--caramel)); opacity: 0; transition: opacity 0.2s;
+}
+.pkg-card:hover { border-color: var(--caramel); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(196,154,108,0.15); }
+.pkg-card:hover::before { opacity: 1; }
+.pkg-card.selected { border-color: var(--caramel); background: #fffaf5; box-shadow: 0 4px 20px rgba(196,154,108,0.2); }
+.pkg-card.selected::before { opacity: 1; }
+.pkg-badge {
+  position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: transparent; transition: all 0.2s;
+}
+.pkg-card.selected .pkg-badge { background: var(--caramel); border-color: var(--caramel); color: #fff; }
+.pkg-price { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--caramel); line-height: 1; margin-bottom: 2px; }
+.pkg-price sup { font-size: 16px; }
+.pkg-name { font-size: 12px; color: var(--muted); letter-spacing: 2px; margin-bottom: 14px; }
+.pkg-features { list-style: none; }
+.pkg-features li { font-size: 12.5px; color: var(--muted); padding: 3px 0 3px 12px; position: relative; line-height: 1.7; }
+.pkg-features li::before { content: '·'; position: absolute; left: 0; color: var(--caramel); font-size: 20px; line-height: 1.1; }
+
+.note-box {
+  background: linear-gradient(135deg, var(--cream), var(--milk));
+  border: 1px solid var(--latte); border-left: 3px solid var(--rose);
+  border-radius: 0 4px 4px 0; padding: 11px 16px;
+  font-size: 12.5px; color: var(--muted); line-height: 1.9; margin-bottom: 4px;
+}
+
+.addon-list { display: flex; flex-direction: column; gap: 7px; }
+.addon-row {
+  display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+  border: 1px solid var(--border); border-radius: 5px; background: var(--milk);
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.addon-row:hover { border-color: var(--caramel); background: #fffaf5; }
+.addon-row.active { border-color: var(--caramel); background: #fffaf5; }
+.chk {
+  width: 18px; height: 18px; flex-shrink: 0; border: 1.5px solid var(--border); border-radius: 3px;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; transition: all 0.18s;
+}
+.addon-row.active .chk { background: var(--caramel); border-color: var(--caramel); color: #fff; }
+.addon-label { flex: 1; font-size: 13px; color: var(--text); line-height: 1.5; }
+.addon-sub { font-size: 11px; color: var(--muted); display: block; }
+.addon-price { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--caramel); white-space: nowrap; }
+
+.qty-row {
+  display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+  border: 1px solid var(--border); border-radius: 5px; background: var(--milk);
+}
+.qty-row .addon-label { flex: 1; }
+.qty-ctrl { display: flex; align-items: center; gap: 10px; }
+.qty-btn {
+  width: 26px; height: 26px; border: 1px solid var(--caramel); background: none; color: var(--caramel);
+  font-size: 18px; cursor: pointer; border-radius: 4px; display: flex; align-items: center;
+  justify-content: center; line-height: 1; transition: all 0.18s; font-family: serif;
+}
+.qty-btn:hover { background: var(--caramel); color: #fff; }
+.qty-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--espresso); min-width: 22px; text-align: center; }
+.qty-price { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--caramel); }
+
+.custom-input-wrap { display: flex; align-items: center; gap: 3px; font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--caramel); }
+.custom-input-wrap input {
+  width: 82px; border: none; border-bottom: 1px solid var(--latte); background: transparent;
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--caramel);
+  text-align: right; outline: none; padding: 2px 4px;
+}
+.custom-input-wrap input::placeholder { color: var(--latte); font-size: 13px; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.sticky {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: var(--cream); border-top: 1.5px solid var(--latte);
+  padding: 16px 24px 20px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+  box-shadow: 0 -4px 30px rgba(74,55,40,0.12);
+}
+.sticky-left { flex: 1; }
+.sticky-lbl { font-size: 10px; letter-spacing: 3px; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; }
+.sticky-total { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: var(--mocha); line-height: 1; }
+.sticky-total.empty-state { font-size: 15px; color: var(--muted); letter-spacing: 2px; }
+.sticky-disclaimer { font-size: 13px; color: var(--muted); letter-spacing: 1px; margin-top: 5px; line-height: 1.6; }
+.sticky-right { text-align: right; max-width: 240px; }
+.bd-row { display: flex; justify-content: flex-end; gap: 10px; font-size: 11.5px; line-height: 1.9; color: var(--muted); }
+.bd-val { color: var(--mocha); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-crown">👑</div>
+  <div class="hero-en">Princess Ann's Closet</div>
+  <div class="hero-zh">安公主的衣櫃寫真方案</div>
+  <div class="hero-tagline">每一個瞬間，都值得被珍藏</div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('family')"><span class="tab-icon">🏡</span>全家福方案</button>
+    <button class="tab-btn" onclick="switchTab('child')"><span class="tab-icon">🌸</span>兒童寫真方案</button>
+    <button class="tab-btn" onclick="switchTab('mother')"><span class="tab-icon">💕</span>母女寫真</button>
+  </div>
+</div>
+
+<div class="card">
+
+  <!-- ══ FAMILY ══ -->
+  <div class="panel active" id="panel-family">
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">選擇套餐</div><div class="sec-line"></div></div>
+    <div class="pkg-grid">
+      <div class="pkg-card" id="fpkg1" onclick="selectPkg('family',1,10800,'輕鬆拍全家')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>10,800</div>
+        <div class="pkg-name">輕鬆拍全家</div>
+        <ul class="pkg-features">
+          <li>10 張精修照片</li>
+          <li>精裝相簿一本</li>
+          <li>隨身碟一支</li>
+          <li>爸媽兩個小孩全員妝髮</li>
+          <li>服裝自理</li>
+        </ul>
+      </div>
+      <div class="pkg-card" id="fpkg2" onclick="selectPkg('family',2,25000,'精緻全家福')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>25,000</div>
+        <div class="pkg-name">精緻全家福</div>
+        <ul class="pkg-features">
+          <li>20 張精修照片</li>
+          <li>精裝相簿一本</li>
+          <li>隨身碟一支</li>
+          <li>爸爸西裝＋媽媽禮服</li>
+          <li>一個小孩含禮服</li>
+          <li>第二小孩禮服另租</li>
+          <li>可加拍便服及外景</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-box">✦ 全家福方案以親子互動為主，家長與小孩同框比例較高，溫馨記錄家人之間的美好時光。</div>
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">加購選項</div><div class="sec-line"></div></div>
+    <div class="addon-list">
+      <div class="qty-row">
+        <div class="addon-label">多一人入鏡 <span class="addon-sub">每人 $1,000</span></div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('family',-1)">−</button>
+          <div class="qty-num" id="fqty">0</div>
+          <button class="qty-btn" onclick="changeQty('family',1)">+</button>
+        </div>
+        <div class="qty-price" id="fqty-price">$0</div>
+      </div>
+      <div class="addon-row" id="faddon-mom-dress" onclick="toggleAddon('family','mom-dress',3000)"><div class="chk">✓</div><div class="addon-label">媽媽 禮服＋妝髮</div><div class="addon-price">+$3,000</div></div>
+      <div class="addon-row" id="faddon-dad-suit" onclick="toggleAddon('family','dad-suit',2000)"><div class="chk">✓</div><div class="addon-label">爸爸 西裝＋妝髮</div><div class="addon-price">+$2,000</div></div>
+      <div class="addon-row" id="faddon-mom-makeup" onclick="toggleAddon('family','mom-makeup',2000)"><div class="chk">✓</div><div class="addon-label">媽媽 加妝髮</div><div class="addon-price">+$2,000</div></div>
+      <div class="addon-row" id="faddon-dad-makeup" onclick="toggleAddon('family','dad-makeup',1000)"><div class="chk">✓</div><div class="addon-label">爸爸 加妝髮</div><div class="addon-price">+$1,000</div></div>
+      <div class="addon-row" id="faddon-girl-dress" onclick="activateCustom('family','girl-dress')">
+        <div class="chk">✓</div>
+        <div class="addon-label">小女生 禮服＋妝髮<span class="addon-sub">費用浮動 $1,500～$5,000，請輸入金額</span></div>
+        <div class="custom-input-wrap" onclick="event.stopPropagation()">+$<input type="number" id="finput-girl-dress" placeholder="金額" min="0" onfocus="activateCustom('family','girl-dress')" oninput="onCustomInput('family','girl-dress')"></div>
+      </div>
+      <div class="addon-row" id="faddon-boy-suit" onclick="toggleAddon('family','boy-suit',1000)"><div class="chk">✓</div><div class="addon-label">小男生 西裝＋妝髮</div><div class="addon-price">+$1,000</div></div>
+      <div class="addon-row" id="faddon-teen-makeup" onclick="toggleAddon('family','teen-makeup',1000)"><div class="chk">✓</div><div class="addon-label">12歲以上 妝髮加收</div><div class="addon-price">+$1,000</div></div>
+    </div>
+  </div>
+
+  <!-- ══ CHILD ══ -->
+  <div class="panel" id="panel-child">
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">選擇套餐</div><div class="sec-line"></div></div>
+    <div class="pkg-grid">
+      <div class="pkg-card" id="cpkg1" onclick="selectPkg('child',1,8800,'生活感寫真')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>8,800</div>
+        <div class="pkg-name">生活感寫真</div>
+        <ul class="pkg-features">
+          <li>10 張精修照片</li>
+          <li>含 1 張簡單全家福</li>
+          <li>精裝相本一本</li>
+          <li>隨身碟一支</li>
+          <li>一位小朋友妝髮</li>
+          <li>衣服自理，禮服可加購</li>
+        </ul>
+      </div>
+      <div class="pkg-card" id="cpkg2" onclick="selectPkg('child',2,16800,'精緻感寫真')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>16,800</div>
+        <div class="pkg-name">精緻感寫真</div>
+        <ul class="pkg-features">
+          <li>20 張精修照片</li>
+          <li>含 1 張簡單全家福</li>
+          <li>精裝相本一本</li>
+          <li>隨身碟一支</li>
+          <li>指定區禮服／西裝一套含妝髮</li>
+          <li>第二套禮服可加購</li>
+          <li>可加拍便服及外景</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-box">✦ 兒童寫真方案以小朋友為絕對主角，全家福部分簡單記念拍攝，呈現孩子最自然的笑容與個性。</div>
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">加購選項</div><div class="sec-line"></div></div>
+    <div class="addon-list">
+      <div class="qty-row">
+        <div class="addon-label">多一人入鏡 <span class="addon-sub">每人 $1,000</span></div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('child',-1)">−</button>
+          <div class="qty-num" id="cqty">0</div>
+          <button class="qty-btn" onclick="changeQty('child',1)">+</button>
+        </div>
+        <div class="qty-price" id="cqty-price">$0</div>
+      </div>
+      <div class="addon-row" id="caddon-mom-dress" onclick="toggleAddon('child','mom-dress',3000)"><div class="chk">✓</div><div class="addon-label">媽媽 禮服＋妝髮</div><div class="addon-price">+$3,000</div></div>
+      <div class="addon-row" id="caddon-dad-suit" onclick="toggleAddon('child','dad-suit',2000)"><div class="chk">✓</div><div class="addon-label">爸爸 西裝＋妝髮</div><div class="addon-price">+$2,000</div></div>
+      <div class="addon-row" id="caddon-mom-makeup" onclick="toggleAddon('child','mom-makeup',2000)"><div class="chk">✓</div><div class="addon-label">媽媽 加妝髮</div><div class="addon-price">+$2,000</div></div>
+      <div class="addon-row" id="caddon-dad-makeup" onclick="toggleAddon('child','dad-makeup',1000)"><div class="chk">✓</div><div class="addon-label">爸爸 加妝髮</div><div class="addon-price">+$1,000</div></div>
+      <div class="addon-row" id="caddon-girl-dress" onclick="activateCustom('child','girl-dress')">
+        <div class="chk">✓</div>
+        <div class="addon-label">小女生 禮服＋妝髮<span class="addon-sub">費用浮動 $1,500～$5,000，請輸入金額</span></div>
+        <div class="custom-input-wrap" onclick="event.stopPropagation()">+$<input type="number" id="cinput-girl-dress" placeholder="金額" min="0" onfocus="activateCustom('child','girl-dress')" oninput="onCustomInput('child','girl-dress')"></div>
+      </div>
+      <div class="addon-row" id="caddon-boy-suit" onclick="toggleAddon('child','boy-suit',1000)"><div class="chk">✓</div><div class="addon-label">小男生 西裝＋妝髮</div><div class="addon-price">+$1,000</div></div>
+      <div class="addon-row" id="caddon-teen-makeup" onclick="toggleAddon('child','teen-makeup',1000)"><div class="chk">✓</div><div class="addon-label">12歲以上 妝髮加收</div><div class="addon-price">+$1,000</div></div>
+    </div>
+  </div>
+
+  <!-- ══ MOTHER ══ -->
+  <div class="panel" id="panel-mother">
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">選擇套餐</div><div class="sec-line"></div></div>
+    <div class="pkg-grid">
+      <div class="pkg-card" id="mpkg1" onclick="selectPkg('mother',1,15800,'基本方案')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>15,800</div>
+        <div class="pkg-name">基本方案</div>
+        <ul class="pkg-features">
+          <li>10 張精修照片</li>
+          <li>精裝相本一本</li>
+          <li>隨身碟一支</li>
+          <li>媽媽禮服一套含妝髮</li>
+          <li>小女生／小男生 指定區禮服或西裝一套含妝髮</li>
+        </ul>
+      </div>
+      <div class="pkg-card" id="mpkg2" onclick="selectPkg('mother',2,23800,'精緻方案')">
+        <div class="pkg-badge">✓</div>
+        <div class="pkg-price"><sup>$</sup>23,800</div>
+        <div class="pkg-name">精緻方案</div>
+        <ul class="pkg-features">
+          <li>20 張精修照片</li>
+          <li>精裝相本一本</li>
+          <li>隨身碟一支</li>
+          <li>媽媽禮服一套含妝髮</li>
+          <li>小女生／小男生 指定區禮服或西裝一套含妝髮</li>
+          <li>可加拍外景</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-box">✦ 母女（親子）寫真，記錄媽媽與孩子之間獨一無二的珍貴情感，每個眼神都是最美的故事。</div>
+    <div class="sec-label"><div class="sec-dot"></div><div class="sec-title">加購選項</div><div class="sec-line"></div></div>
+    <div class="addon-list">
+      <div class="qty-row">
+        <div class="addon-label">多一人入鏡 <span class="addon-sub">每人 $1,000</span></div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('mother',-1)">−</button>
+          <div class="qty-num" id="mqty">0</div>
+          <button class="qty-btn" onclick="changeQty('mother',1)">+</button>
+        </div>
+        <div class="qty-price" id="mqty-price">$0</div>
+      </div>
+      <div class="addon-row" id="maddon-mom-dress" onclick="toggleAddon('mother','mom-dress',3000)"><div class="chk">✓</div><div class="addon-label">媽媽 禮服＋妝髮（第二套）</div><div class="addon-price">+$3,000</div></div>
+      <div class="addon-row" id="maddon-girl-dress" onclick="activateCustom('mother','girl-dress')">
+        <div class="chk">✓</div>
+        <div class="addon-label">小女生 禮服＋妝髮（第二套）<span class="addon-sub">費用浮動 $1,500～$5,000，請輸入金額</span></div>
+        <div class="custom-input-wrap" onclick="event.stopPropagation()">+$<input type="number" id="minput-girl-dress" placeholder="金額" min="0" onfocus="activateCustom('mother','girl-dress')" oninput="onCustomInput('mother','girl-dress')"></div>
+      </div>
+      <div class="addon-row" id="maddon-boy-suit" onclick="toggleAddon('mother','boy-suit',1000)"><div class="chk">✓</div><div class="addon-label">小男生 西裝＋妝髮（第二套）</div><div class="addon-price">+$1,000</div></div>
+      <div class="addon-row" id="maddon-teen-makeup" onclick="toggleAddon('mother','teen-makeup',1000)"><div class="chk">✓</div><div class="addon-label">12歲以上 妝髮加收</div><div class="addon-price">+$1,000</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- STICKY TOTAL -->
+<div class="sticky">
+  <div class="sticky-left">
+    <div class="sticky-lbl">預估報價合計</div>
+    <div class="sticky-total empty-state" id="total-display">請先選擇套餐</div>
+    <div class="sticky-disclaimer">※ 實際報價以公司門市人員最終報價為主</div>
+  </div>
+  <div class="sticky-right" id="breakdown"></div>
+</div>
+
+<script>
+const tabs = ['family','child','mother'];
+const prefixMap = { family:'f', child:'c', mother:'m' };
+const addonLabels = {
+  'mom-dress':   '媽媽禮服＋妝髮',
+  'dad-suit':    '爸爸西裝＋妝髮',
+  'mom-makeup':  '媽媽加妝髮',
+  'dad-makeup':  '爸爸加妝髮',
+  'girl-dress':  '小女生禮服＋妝髮',
+  'boy-suit':    '小男生西裝＋妝髮',
+  'teen-makeup': '12歲以上妝髮',
+};
+
+const state = {};
+tabs.forEach(t => state[t] = { pkg:null, pkgPrice:0, pkgName:'', addons:{}, qty:0 });
+let activeTab = 'family';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', tabs[i]===tab));
+  tabs.forEach(t => document.getElementById('panel-'+t).classList.toggle('active', t===tab));
+  renderTotal();
+}
+
+function selectPkg(tab, n, price, name) {
+  const s = state[tab];
+  s.pkg = n; s.pkgPrice = price; s.pkgName = name;
+  const pre = prefixMap[tab];
+  [1,2].forEach(i => { const el = document.getElementById(pre+'pkg'+i); if(el) el.classList.toggle('selected', i===n); });
+  renderTotal();
+}
+
+function toggleAddon(tab, key, price) {
+  const s = state[tab];
+  const pre = prefixMap[tab];
+  const el = document.getElementById(pre+'addon-'+key);
+  if (s.addons[key] !== undefined) { delete s.addons[key]; el.classList.remove('active'); }
+  else { s.addons[key] = price; el.classList.add('active'); }
+  renderTotal();
+}
+
+function activateCustom(tab, key) {
+  const s = state[tab];
+  const pre = prefixMap[tab];
+  const el = document.getElementById(pre+'addon-'+key);
+  if (s.addons[key] === undefined) { s.addons[key] = 0; el.classList.add('active'); renderTotal(); }
+}
+
+function onCustomInput(tab, key) {
+  const pre = prefixMap[tab];
+  const val = parseInt(document.getElementById(pre+'input-'+key).value) || 0;
+  if (state[tab].addons[key] !== undefined) { state[tab].addons[key] = val; renderTotal(); }
+}
+
+function changeQty(tab, delta) {
+  const s = state[tab];
+  s.qty = Math.max(0, s.qty + delta);
+  const pre = prefixMap[tab];
+  document.getElementById(pre+'qty').textContent = s.qty;
+  document.getElementById(pre+'qty-price').textContent = s.qty > 0 ? '+$'+(s.qty*1000).toLocaleString() : '$0';
+  renderTotal();
+}
+
+function renderTotal() {
+  const s = state[activeTab];
+  const totalEl = document.getElementById('total-display');
+  const bdEl = document.getElementById('breakdown');
+  if (!s.pkg) {
+    totalEl.className = 'sticky-total empty-state';
+    totalEl.textContent = '請先選擇套餐';
+    bdEl.innerHTML = '';
+    return;
+  }
+  const addonSum = Object.values(s.addons).reduce((a,b)=>a+b,0);
+  const grand = s.pkgPrice + addonSum + s.qty*1000;
+  totalEl.className = 'sticky-total';
+  totalEl.innerHTML = '<span style="font-size:18px;vertical-align:super;font-family:serif">$</span>'+grand.toLocaleString();
+  let rows = `<div class="bd-row"><span>${s.pkgName}</span><span class="bd-val">$${s.pkgPrice.toLocaleString()}</span></div>`;
+  for (const [k,v] of Object.entries(s.addons)) {
+    if (v>0) rows += `<div class="bd-row"><span>${addonLabels[k]||k}</span><span class="bd-val">+$${v.toLocaleString()}</span></div>`;
+  }
+  if (s.qty>0) rows += `<div class="bd-row"><span>多入鏡 ${s.qty} 人</span><span class="bd-val">+$${(s.qty*1000).toLocaleString()}</span></div>`;
+  bdEl.innerHTML = rows;
+}
+</script>
+</body>
+</html>
